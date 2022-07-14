@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'goldprice/css/index.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Gold Price Prediction</h1>
+    <div class="content">
+        <div class="chart">
+            <canvas id="myChart"></canvas>
+        </div>
+        <aside class="detail">
+            <table class="table-detail">
+                <tr>
+                    <th><h2>Date    </h2></th>
+                    <th><h2>Close   </h2></th>
+                    <th><h2>growth  </h2></th>                    
+                </tr>
+                {% for p in predictedPrices reversed %}
+                <tr class="prediction {% if p.growth <= 0 %}negative{% else %} positive {% endif %}">
+
+                    <td><h4>{{p.date}}  </h4></td>
+                    <td><h4>{{p.close}} </h4></td>
+                    <td><h4>{{p.growth}} %</h4></td>
+                </tr>
+                {% endfor %}
+                {% for p in prices reversed %}
+                <tr class="{% if p.growth <= 0 %}negative{% else %}positive{% endif %}">
+                    <td><h4>{{p.date}}  </h4></td>
+                    <td><h4>{{p.close}} </h4></td>
+                    <td><h4>{{p.growth}} %</h4></td>
+                </tr>
+                {% endfor %}
+                
+            </table>
+
+        </aside>    
+    </div>
+    
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript">
+        let priceList = []
+        "{% for p in prices %}"
+            priceList.push({{p.close}})
+        "{% endfor %}"
+        let realPriceLen = priceList.length
+        "{% for p in predictedPrices %}"
+            priceList.push({{p.close}})
+        "{% endfor %}"
+
+        let index = []
+        "{% for p in prices %}"
+            index.push("{{p.date}}")
+        "{% endfor %}"
+        "{% for p in predictedPrices %}"
+            index.push("{{p.date}}")
+        "{% endfor %}"
+
+        console.log(priceList)
+        console.log(index)
+
+
+        const skipped = (ctx, value) => 
+            ctx.p0.skip || ctx.p1.skip ? value : undefined;
+        const down = (ctx, value) => 
+            ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
+        const dashedPrediction = (ctx, value) =>{
+            if(ctx.p0.parsed.x >= realPriceLen-1){
+                console.log("returns value : "+value);
+                return value
+            }
+            console.log("returns undefined ");
+            return undefined
+        }
+        
+        const data = {
+            labels: index,
+            datasets: [
+                {
+                    data: priceList,
+                    label: "Gold Price",
+                    backgroundColor: 'rgb(255, 200, 0)',
+                    borderColor: 'rgb(255, 200, 0)',
+                    borderWidth: 2,
+                    segment: {
+                        borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, 'rgb(255,94,0)'),
+                        borderDash: ctx => dashedPrediction(ctx,[5, 5]),
+                    },
+                },
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                animation: true,
+                maintainAspectRatio: false,
+                layout : {
+                    padding : 20,
+                },
+                elements : {
+                    point : {
+                        pointRadius : 0
+                    }
+                },
+                scales : {
+                    y : {
+                        title : {
+                            display : true,
+                            text : "$/oz"
+                        },
+                        ticks : {
+                            callback : (value) => {
+                                return "$ "+value
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 20
+                        }
+                    }
+                }
+            }
+        };
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+
+    </script>
+
+</body>
+</html>

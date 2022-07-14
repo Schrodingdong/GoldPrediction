@@ -1,0 +1,84 @@
+*{
+    font-family: 'Poppins', sans-serif;
+    color: rgb(61, 66, 75);
+    --spacing : 1em;
+    --biggerspacing : 2em;
+}
+
+body{
+    background: linear-gradient(131deg, 
+    rgb(237, 239, 255) 0%,
+    rgb(255, 255, 255) 100%) no-repeat center center fixed;
+    text-align: center;
+    margin: 0;
+}
+
+h1{
+    background-color: rgb(203, 192, 211);
+    margin: 0 0 1em 0 ;
+    padding: var(--spacing);
+}
+
+.content{
+    margin: auto;
+    width: 80%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.detail{
+    width: 30%;
+    max-height: calc(65vh + 2 * var(--biggerspacing));
+    margin:  0 var(--biggerspacing);
+    background-color: rgb(255, 255, 255);
+    overflow-y: scroll;
+    border-radius: 1em;
+    box-shadow:  0 0 1em rgba(0,0,0,0.2);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.table-detail{
+    table-layout: fixed;
+    margin: var(--spacing);
+    border-collapse: collapse;
+}
+.table-detail td{
+    border-bottom-style: solid;
+    border-bottom-color: black;
+    border-bottom-width: 2px;
+    width: 33%;
+}
+
+.table-detail tr.prediction.positive{
+    box-shadow: -5px 0px 0px 0px rgb(18, 219, 0);
+    background-color: rgba(0, 255, 166, 0.2);
+
+}
+.table-detail tr.prediction.negative{
+    box-shadow: -5px 0px 0px 0px rgb(255, 0, 0);
+    background-color: rgba(255, 0, 0, 0.2);
+
+    
+}
+.table-detail tr.positive td{
+    background-color: rgba(0, 175, 114, 0.15);
+}
+.table-detail tr.negative td{
+    background-color: rgba(173, 0, 0, 0.15);
+}
+
+
+
+.chart{
+    width: 70%;
+    margin:  0 var(--biggerspacing);
+    padding: var(--biggerspacing);
+    height: 65vh;
+    border-radius: 1em;
+    box-shadow:  0 0 1em rgba(0,0,0,0.2);
+    background-color: rgb(255, 255, 255);
+
+}
